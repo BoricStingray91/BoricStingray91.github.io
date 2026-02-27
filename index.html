@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exhibition — Vol. 02</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* The Core Palette */
+            --bg-base: #f1f2f4;  /* The light gallery wall */
+            --ink: #111316;      /* Dark text */
+            --cobalt: #1a365d;   /* The punchy blue for the card */
+            --midnight: #0a1526; /* The super dark blue for the night background */
+            --terra: #c85a47;    /* Terracotta */
+            --card-bg: #e4e6ea;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            padding: 8vh 10vw;
+            transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.8s ease;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Custom Selection Highlight --- */
+        ::selection {
+            background: var(--terra);
+            color: #fff;
+        }
+
+        body.night-mode ::selection {
+            background: var(--bg-base);
+            color: var(--midnight);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10vh;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            padding-bottom: 2rem;
+            transition: border-color 0.8s ease;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(3.5rem, 11vw, 6.5rem);
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            font-weight: 400;
+        }
+
+        .meta {
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            color: inherit;
+            text-transform: uppercase;
+            font-weight: 600;
+            opacity: 0.6;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5vw;
+            margin-bottom: 12vh;
+        }
+
+        .card {
+            position: relative;
+            aspect-ratio: 1 / 1.15;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+        }
+
+        body.night-mode .card {
+            border-color: rgba(255,255,255,0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        
+        /* Art 1: The Cobalt Archway */
+        .card-blue { background-color: var(--cobalt); } /* Restored to Cobalt */
+        
+        .art-arch {
+            width: 45%;
+            height: 65%;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 120px 120px 0 0;
+            border-bottom: none;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .art-arch::after {
+            content: '';
+            width: 70%;
+            height: 85%;
+            background: #f1f2f4; 
+            border-radius: 100px 100px 0 0;
+            opacity: 0.95;
+        }
+
+        /* Art 2: The Terracotta Balance */
+        .card-terra { background-color: var(--terra); }
+        
+        .art-balance {
+            width: 120px;
+            height: 120px;
+            background: #f1f2f4; 
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        .art-balance::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -40px;
+            right: -40px;
+            height: 2px;
+            background: #111316; 
+            transform: translateY(-50%) rotate(-15deg);
+        }
+
+        .card-label {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.95);
+            color: #000;
+            padding: 10px 18px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            pointer-events: none;
+        }
+
+        /* --- Manifesto & Footer Section --- */
+        footer {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .btn-main {
+            font-family: 'DM Serif Display', serif;
+            background: none;
+            color: inherit;
+            border: 1px solid currentColor;
+            padding: 1rem 3rem;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-main:hover {
+            background: var(--ink);
+            color: var(--bg-base);
+        }
+
+        body.night-mode .btn-main:hover {
+            background: var(--bg-base);
+            color: var(--midnight);
+        }
+
+        .philosophy {
+            font-size: 0.95rem;
+            font-style: italic;
+            opacity: 0.75;
+            margin-top: 2.5rem;
+        }
+
+        /* Drawer Mechanics */
+        .manifesto-drawer {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            text-align: left;
+            margin-top: 0;
+            padding-top: 0;
+            border-top: 1px solid transparent;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .manifesto-drawer.open {
+            max-height: 400px; 
+            opacity: 1;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top-color: rgba(0,0,0,0.1);
+        }
+
+        body.night-mode .manifesto-drawer.open {
+            border-top-color: rgba(255,255,255,0.15);
+        }
+
+        .manifesto-drawer p {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 800px) {
+            .gallery { grid-template-columns: 1fr; }
+            h1 { font-size: 4rem; }
+            header { flex-direction: column; }
+            .meta { margin-top: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="site-header">
+        <h1>Exhibition<br>Volume 02</h1>
+        <div class="meta">Modernist Form</div>
+    </header>
+
+    <div class="gallery">
+        <div class="card card-blue" onclick="setTheme('#0a1526', '#f1f2f4', true)">
+            <div class="art-arch"></div>
+            <button class="card-label">Night Gallery Mode</button>
+        </div>
+
+        <div class="card card-terra" onclick="setTheme('#f1f2f4', '#111316', false)">
+            <div class="art-balance"></div>
+            <button class="card-label">Studio Light Mode</button>
+        </div>
+    </div>
+
+    <footer>
+        <button id="manifesto-btn" class="btn-main" onclick="toggleManifesto()">View Manifesto</button>
+        
+        <div class="philosophy">
+            Structure is not just a visual construct, but a language.
+        </div>
+
+        <div id="manifesto-content" class="manifesto-drawer">
+            <p><strong>I. The Intent of Space</strong><br>
+            Form does not follow function; form and function are entirely unified. We reject the unnecessary and embrace the purposeful. The space left empty is just as vital as the space filled.</p>
+            
+            <p><strong>II. Color as Weight</strong><br>
+            A color is never just a hue. It has mass, gravity, and tension. The deep midnight pulls the eye inward, while the terracotta anchors the horizon. Adjusting the lighting shifts the physical reality of the design.</p>
+        </div>
+    </footer>
+
+    <script>
+        function setTheme(bgColor, textColor, isNight) {
+            document.body.style.backgroundColor = bgColor;
+            document.body.style.color = textColor;
+            
+            if (isNight) {
+                document.body.classList.add('night-mode');
+            } else {
+                document.body.classList.remove('night-mode');
+            }
+            
+            document.getElementById('site-header').style.borderBottomColor = isNight ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)';
+        }
+
+        function toggleManifesto() {
+            const drawer = document.getElementById('manifesto-content');
+            const btn = document.getElementById('manifesto-btn');
+            
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                btn.innerText = 'View Manifesto';
+            } else {
+                drawer.classList.add('open');
+                btn.innerText = 'Close Manifesto';
+            }
+        }
+    </script>
+
+</body>
+</html>
